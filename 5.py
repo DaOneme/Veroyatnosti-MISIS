@@ -72,14 +72,29 @@ print(f'Тест Шапиро-Уилка: статистика = {shapiro_stat:.
 if shapiro_p > 0.05:
     print('Данные в норме')
 else:
-    print('Данные не в норме')
+    # print('Данные не в норме')
 
     # тест колмогорова
     shape, loc, scale = stats.lognorm.fit(df_clean['Price_euros'], floc=0)
     ks_stat, ks_p = stats.kstest(df_clean['Price_euros'], 'lognorm', args=(shape, loc, scale))
-    print(f'статистика = {ks_stat:.4f}, p-value = {ks_p:.4f}')
+    print(f'логнормальная статистика = {ks_stat:.4f}, p-value = {ks_p:.4f}')
 
     a, loc, scale = stats.gamma.fit(df_clean['Price_euros'])
     ks_stat_gamma, ks_p_gamma = stats.kstest(df_clean['Price_euros'], 'gamma', args=(a, loc, scale))
-    print(f'статистика = {ks_stat_gamma:.4f}, p-value = {ks_p_gamma:.4f}')
+    print(f'гамма-распределение статистика = {ks_stat_gamma:.4f}, p-value = {ks_p_gamma:.4f}')
 
+
+    if ks_p > ks_p_gamma:
+        print('Наиболее подходящее распределение — логнормальное.')
+    else:
+        print('Наиболее подходящее распределение — гамма.')
+
+
+if shapiro_p > 0.05:
+    distribution = 'нормальное'
+else:
+    if ks_p > ks_p_gamma:
+        distribution = 'логнормальное'
+    else:
+        distribution = 'гамма-распределение'
+        distribution = 'гамма-распределение'
